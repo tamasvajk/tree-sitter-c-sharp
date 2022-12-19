@@ -21,6 +21,7 @@ const PREC = {
   COALESCING: 3,
   COND: 2,
   ASSIGN: 1,
+  LAMBDA: 1,
   SELECT: 0,
 };
 
@@ -351,7 +352,7 @@ module.exports = grammar({
     parameter: $ => prec(REF_PREC.PARAMETER, seq(
       repeat($.attribute_list),
       optional(alias(choice('ref', 'out', 'this', 'in'), $.parameter_modifier)),
-      optional(field('type', $._type)),
+      optional(field('type', $._type)), // todo: why is this optional? Only for __arglist????
       field('name', $.identifier),
       optional($.equals_value_clause)
     )),
@@ -1123,6 +1124,7 @@ module.exports = grammar({
     lambda_expression: $ => prec(-1, seq(
       repeat($.attribute_list),
       repeat($.modifier),
+      //optional($._type), // todo optional return type
       choice(field('parameters', $.parameter_list), $.identifier),
       '=>',
       field('body', choice($.block, $._expression))
@@ -1170,12 +1172,12 @@ module.exports = grammar({
 
     await_expression: $ => prec.right(PREC.UNARY, seq('await', $._expression)),
 
-    cast_expression: $ => prec.right(PREC.CAST, seq(
+    cast_expression: $ => prec.right(PREC.CAST, prec.dynamic(1, seq(
       '(',
       field('type', $._type),
       ')',
       field('value', $._expression)
-    )),
+    ))),
 
     checked_expression: $ => choice(
       seq('checked', '(', $._expression, ')'),
@@ -1521,7 +1523,7 @@ module.exports = grammar({
       $.invocation_expression,
       $.is_expression,
       $.is_pattern_expression,
-      $.lambda_expression,
+      //$.lambda_expression,
       $.make_ref_expression,
       $.member_access_expression,
       // $.member_binding_expression, // Not needed as handled directly in $.conditional_access_expression
