@@ -24,6 +24,23 @@ const PREC = {
   SELECT: 0,
 };
 
+const TYPE_PREC = {
+  POINTER: PREC.POSTFIX,           // ref int*  -> int32*&
+  ARRAY: PREC.POSTFIX,             // ref int[] -> int32[]&
+  REF_TYPE: PREC.PREFIX,
+}
+
+const REF_PREC = {
+  MODIFIER: 0,                            // default
+
+  REF_TYPE: TYPE_PREC.REF_TYPE,           // ref int Method();        // ref is not a modifier, it's a ref-type
+  PARAMETER: TYPE_PREC.REF_TYPE + 1,      // void Method(ref int i);  // ref is a parameter modifier
+
+  // These are the call site equivalent of the above two:
+  REF_EXPR: TYPE_PREC.REF_TYPE,
+  ARGUMENT: TYPE_PREC.REF_TYPE + 1,
+}
+
 const decimalDigitSequence = /([0-9][0-9_]*[0-9]|[0-9])/;
 
 module.exports = grammar({
@@ -84,6 +101,7 @@ module.exports = grammar({
     [$.parameter, $._simple_name],
     [$.parameter, $.tuple_element],
     [$.parameter, $.tuple_element, $.declaration_expression],
+    [$.parameter, $.ref_type, $.declaration_expression],
     [$.parameter, $._pattern],
     [$.parameter, $.declaration_expression],
 
@@ -244,7 +262,7 @@ module.exports = grammar({
       ';'
     )),
 
-    modifier: $ => prec.right(choice(
+    modifier: $ => prec.right(REF_PREC.MODIFIER, choice(
       'abstract',
       'async',
       'const',
@@ -259,7 +277,7 @@ module.exports = grammar({
       'public',
       'readonly',
       'required',
-      prec(1, 'ref'), //make sure that 'ref' is treated as a modifier for local variable declarations instead of as a ref expression
+      'ref',
       'sealed',
       'static',
       'unsafe',
@@ -290,7 +308,7 @@ module.exports = grammar({
       ')'
     ),
 
-    argument: $ => prec(1, seq(
+    argument: $ => prec(REF_PREC.ARGUMENT, seq(
       optional($.name_colon),
       optional(choice('ref', 'out', 'in')),
       choice(
@@ -330,13 +348,13 @@ module.exports = grammar({
       $._parameter_array
     )),
 
-    parameter: $ => seq(
+    parameter: $ => prec(REF_PREC.PARAMETER, seq(
       repeat($.attribute_list),
       optional(alias(choice('ref', 'out', 'this', 'in'), $.parameter_modifier)),
       optional(field('type', $._type)),
       field('name', $.identifier),
       optional($.equals_value_clause)
-    ),
+    )),
 
     parameter_modifier: $ => choice('ref', 'out', 'this', 'in'),
 
@@ -662,11 +680,12 @@ module.exports = grammar({
       $.function_pointer_type,
       $.predefined_type,
       $.tuple_type,
+      $.ref_type,
     ),
 
     implicit_type: $ => 'var',
 
-    array_type: $ => prec(PREC.POSTFIX, seq(
+    array_type: $ => prec(TYPE_PREC.ARRAY, seq(
       field('type', $._type),
       field('rank', $.array_rank_specifier)
     )),
@@ -675,7 +694,7 @@ module.exports = grammar({
     // expression but we can't match empty rules.
     array_rank_specifier: $ => seq('[', commaSep(optional($._expression)), ']'),
 
-    nullable_type: $ => seq($._nullable_base_type, '?'),
+    nullable_type: $ => seq($._nullable_base_type, '?'), // TODO: can this be simplified to `seq($._type, '?')`?
 
     _nullable_base_type: $ => choice(
       $.array_type,
@@ -686,14 +705,15 @@ module.exports = grammar({
       $.tuple_type
     ),
 
-    pointer_type: $ => prec(PREC.POSTFIX, seq($._type, '*')),
+    pointer_type: $ => prec(TYPE_PREC.POINTER, seq($._type, '*')),
 
     function_pointer_type: $ => seq(
       'delegate',
       '*',
       optional($.function_pointer_calling_convention),
       '<',
-      commaSep1($.function_pointer_parameter),
+      repeat(seq($.function_pointer_parameter, ',')),
+      $.function_pointer_return_type,
       '>'
     ),
 
@@ -717,10 +737,12 @@ module.exports = grammar({
       $.identifier
     ),
 
-    function_pointer_parameter: $ => seq(
-      optional(choice('ref', 'out', 'in', seq('ref', 'readonly'))),
+    function_pointer_parameter: $ => prec(REF_PREC.PARAMETER, seq(
+      optional(choice('ref', 'out', 'in')),
       $._type
-    ),
+    )),
+
+    function_pointer_return_type: $ => $._type,
 
     predefined_type: $ => token(choice(
       'bool',
@@ -743,11 +765,11 @@ module.exports = grammar({
       'void'
     )),
 
-    ref_type: $ => seq(
+    ref_type: $ => prec(TYPE_PREC.REF_TYPE, seq(
       'ref',
       optional('readonly'),
       $._type
-    ),
+    )),
 
     tuple_type: $ => seq(
       '(',
@@ -1092,7 +1114,7 @@ module.exports = grammar({
     ),
 
     anonymous_method_expression: $ => seq(
-      optional(alias(choice('async', 'static', seq('async', 'static'), seq('static', 'async')), $.modifier)),
+      repeat($.modifier),
       'delegate',
       optional(field('parameters', $.parameter_list)),
       $.block
@@ -1100,7 +1122,7 @@ module.exports = grammar({
 
     lambda_expression: $ => prec(-1, seq(
       repeat($.attribute_list),
-      optional(alias(choice('async', 'static', seq('async', 'static'), seq('static', 'async')), $.modifier)),
+      repeat($.modifier),
       choice(field('parameters', $.parameter_list), $.identifier),
       '=>',
       field('body', choice($.block, $._expression))
@@ -1407,7 +1429,7 @@ module.exports = grammar({
       optional($._expression)
     )),
 
-    ref_expression: $ => prec.right(seq('ref', $._expression)),
+    ref_expression: $ => prec.right(REF_PREC.REF_EXPR, seq('ref', $._expression)), // Precedence needs to be higher than modifier's
 
     ref_type_expression: $ => seq(
       '__reftype',
