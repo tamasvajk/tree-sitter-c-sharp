@@ -2204,7 +2204,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_simple_name"
+          "name": "identifier_name"
         },
         {
           "type": "SYMBOL",
@@ -3342,7 +3342,7 @@
       "generic_name"
     ],
     [
-      "_name",
+      "_simple_name",
       "_expression"
     ]
   ],

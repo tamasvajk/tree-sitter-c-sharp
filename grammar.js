@@ -52,7 +52,7 @@ module.exports = grammar({
     [$._ref_base_type, $._pointer_base_type],
 
     [$.identifier_name, $.generic_name],
-    [$._name, $._expression],
+    [$._simple_name, $._expression],
 
     //   [$.block, $.initializer_expression],
 
@@ -1609,7 +1609,7 @@ module.exports = grammar({
       $.type_of_expression,
       $.with_expression,
 
-      $._simple_name, // Roslyn specifies _type
+      $.identifier_name, // Roslyn specifies _type, should generic name be allowed?
       $._literal
     ),
 

@@ -63,10 +63,6 @@
           "named": true
         },
         {
-          "type": "generic_name",
-          "named": true
-        },
-        {
           "type": "identifier_name",
           "named": true
         },
@@ -194,10 +190,6 @@
         },
         {
           "type": "default_literal",
-          "named": true
-        },
-        {
-          "type": "generic_name",
           "named": true
         },
         {
@@ -371,10 +363,6 @@
           },
           {
             "type": "default_literal",
-            "named": true
-          },
-          {
-            "type": "generic_name",
             "named": true
           },
           {
@@ -592,10 +580,6 @@
           "named": true
         },
         {
-          "type": "generic_name",
-          "named": true
-        },
-        {
           "type": "identifier_name",
           "named": true
         },
@@ -754,10 +738,6 @@
           "named": true
         },
         {
-          "type": "generic_name",
-          "named": true
-        },
-        {
           "type": "identifier_name",
           "named": true
         },
@@ -866,10 +846,6 @@
           },
           {
             "type": "default_literal",
-            "named": true
-          },
-          {
-            "type": "generic_name",
             "named": true
           },
           {
@@ -1061,10 +1037,6 @@
             "named": true
           },
           {
-            "type": "generic_name",
-            "named": true
-          },
-          {
             "type": "identifier_name",
             "named": true
           },
@@ -1248,10 +1220,6 @@
           },
           {
             "type": "default_literal",
-            "named": true
-          },
-          {
-            "type": "generic_name",
             "named": true
           },
           {
@@ -1447,10 +1415,6 @@
             "named": true
           },
           {
-            "type": "generic_name",
-            "named": true
-          },
-          {
             "type": "identifier_name",
             "named": true
           },
@@ -1557,10 +1521,6 @@
             "named": true
           },
           {
-            "type": "generic_name",
-            "named": true
-          },
-          {
             "type": "identifier_name",
             "named": true
           },
@@ -1664,10 +1624,6 @@
           },
           {
             "type": "default_literal",
-            "named": true
-          },
-          {
-            "type": "generic_name",
             "named": true
           },
           {
@@ -1806,10 +1762,6 @@
           "named": true
         },
         {
-          "type": "generic_name",
-          "named": true
-        },
-        {
           "type": "identifier_name",
           "named": true
         },
@@ -1918,10 +1870,6 @@
         },
         {
           "type": "default_literal",
-          "named": true
-        },
-        {
-          "type": "generic_name",
           "named": true
         },
         {
@@ -2235,10 +2183,6 @@
           "named": true
         },
         {
-          "type": "generic_name",
-          "named": true
-        },
-        {
           "type": "identifier_name",
           "named": true
         },
@@ -2360,10 +2304,6 @@
             "named": true
           },
           {
-            "type": "generic_name",
-            "named": true
-          },
-          {
             "type": "identifier_name",
             "named": true
           },
@@ -2473,10 +2413,6 @@
           },
           {
             "type": "default_literal",
-            "named": true
-          },
-          {
-            "type": "generic_name",
             "named": true
           },
           {
@@ -2730,10 +2666,6 @@
           "named": true
         },
         {
-          "type": "generic_name",
-          "named": true
-        },
-        {
           "type": "identifier_name",
           "named": true
         },
@@ -2892,10 +2824,6 @@
           "named": true
         },
         {
-          "type": "generic_name",
-          "named": true
-        },
-        {
           "type": "identifier_name",
           "named": true
         },
@@ -3009,10 +2937,6 @@
         },
         {
           "type": "default_literal",
-          "named": true
-        },
-        {
-          "type": "generic_name",
           "named": true
         },
         {
@@ -3307,10 +3231,6 @@
         },
         {
           "type": "default_literal",
-          "named": true
-        },
-        {
-          "type": "generic_name",
           "named": true
         },
         {
@@ -3750,10 +3670,6 @@
         },
         {
           "type": "default_literal",
-          "named": true
-        },
-        {
-          "type": "generic_name",
           "named": true
         },
         {
