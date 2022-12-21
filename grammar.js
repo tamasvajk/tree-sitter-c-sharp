@@ -377,7 +377,7 @@ module.exports = grammar({
     // parameter: $ => prec.dynamic(PREC.PARAMETER, seq(
     //   repeat($.attribute_list),
     //   optional(alias(choice('ref', 'out', 'this', 'in'), $.parameter_modifier)),
-    //   optional(field('type', $._type)),
+    //   optional(field('type', $._type)), // todo: why is this optional?
     //   field('name', $.identifier),
     //   optional($.equals_value_clause)
     // )),
