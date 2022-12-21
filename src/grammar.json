@@ -6125,6 +6125,18 @@
             "type": "CHOICE",
             "members": [
               {
+                "type": "SYMBOL",
+                "name": "_type"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
                 "type": "FIELD",
                 "name": "parameters",
                 "content": {
@@ -10531,6 +10543,10 @@
       "name_colon"
     ],
     [
+      "_simple_name",
+      "tuple_pattern"
+    ],
+    [
       "qualified_name",
       "explicit_interface_specifier"
     ],
@@ -10633,6 +10649,10 @@
     [
       "parameter",
       "tuple_element"
+    ],
+    [
+      "parameter",
+      "tuple_pattern"
     ],
     [
       "parameter",
