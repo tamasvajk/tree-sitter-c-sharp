@@ -1,87 +1,61 @@
 =====================================
-Ternary Expression
+Ternary expression
 =====================================
 
-class Foo {
-  void Test() {
-    x ? "foo" : "bar";
-  }
-}
+x ? "foo" : "bar";
 
 ---
 
 (compilation_unit
-  (class_declaration
-    name: (identifier)
-    body: (declaration_list
-      (method_declaration
-        type: (predefined_type)
-        name: (identifier)
-        parameters: (parameter_list)
-        body: (block
-          (expression_statement
-            (conditional_expression
-              condition: (identifier)
-              consequence: (string_literal)
-              alternative: (string_literal))))))))
+  (expression_statement
+    (conditional_expression
+      condition: (identifier_name)
+      consequence: (string_literal)
+      alternative: (string_literal))))
 
 =====================================
-Binary Expressions
+Binary expressions
 =====================================
 
-class Foo {
-  void Test() {
-    x == y;
-    1 + 2;
-  }
-}
+x == y;
+1 + 2;
 
 ---
 
 (compilation_unit
-  (class_declaration
-    name: (identifier)
-    body: (declaration_list
-      (method_declaration
-        type: (predefined_type)
-        name: (identifier)
-        parameters: (parameter_list)
-        body: (block
-          (expression_statement
-            (binary_expression
-              left: (identifier)
-              right: (identifier)))
-          (expression_statement
-            (binary_expression
-              left: (integer_literal)
-              right: (integer_literal))))))))
+  (expression_statement
+    (binary_expression
+      left: (identifier_name)
+      right: (identifier_name)))
+  (expression_statement
+    (binary_expression
+      left: (integer_literal)
+      right: (integer_literal))))
 
 =====================================
 Ternary expressions is type
 =====================================
 
-var t = x is int
+x is int
   ? a
   : b;
 
 ---
 
 (compilation_unit
-  (global_statement
-    (local_declaration_statement
-      (variable_declaration (implicit_type)
-        (variable_declarator (identifier)
-          (equals_value_clause
-            (conditional_expression
-              (is_expression (identifier) (predefined_type))
-              (identifier)
-              (identifier))))))))
+  (expression_statement
+    (conditional_expression
+      (is_expression
+        (identifier_name)
+        (predefined_type))
+      (identifier_name)
+      (identifier_name))))
 
 =====================================
 Ternary expressions is nullable type
 =====================================
 
-var u = x is int?
+x is int?
   ? a
   : b;
 
@@ -99,41 +73,28 @@ var u = x is int?
               (identifier))))))))
 
 =====================================
-Prefix-Unary Expressions
+Prefix-Unary expressions
 =====================================
 
-class Foo {
-  void Test() {
-    ++x;
-    --y;
-  }
-}
+++x;
+--y;
 
 ---
 
 (compilation_unit
-  (class_declaration
-    (identifier)
-    (declaration_list
-      (method_declaration
-        (predefined_type)
-        (identifier)
-        (parameter_list)
-        (block
-        (expression_statement
-          (prefix_unary_expression
-            (identifier)))
-        (expression_statement
-          (prefix_unary_expression
-            (identifier))))))))
+  (expression_statement
+    (prefix_unary_expression
+      (identifier_name)))
+  (expression_statement
+    (prefix_unary_expression
+      (identifier_name))))
 
 =====================================
 Cast expressions
 =====================================
 
-void Test() {
-  a = (B)c + (C)d;
-}
+(B)c;
+(B)c + (C)d;
 
 ---
 
@@ -155,7 +116,7 @@ void Test() {
 Cast expression of array access
 =====================================
 
-b = (float)a[0];
+(float)a[0];
 
 ---
 
@@ -168,7 +129,7 @@ b = (float)a[0];
             (bracketed_argument_list (argument (integer_literal)))))))))
 
 =====================================
-Cast with parenthesized expression
+Cast expression with parenthesized expression
 =====================================
 
 (A.A)(a.a.a);
@@ -212,10 +173,10 @@ Cast with parenthesized expression
             (integer_literal)))))))
 
 =====================================
-Precedence of unary prefix operator and element access
+Precedence of unary prefix operator and element access expression
 =====================================
 
-b = +a[0];
++a[0];
 
 ---
 
@@ -249,13 +210,11 @@ b = 2 * a switch
             (switch_expression_arm (discard) (integer_literal))))))))
 
 ============================
-Anonymous object creation with empty body
+Anonymous object creation expression with empty body
 ============================
 
-void b() {
-  var x = new {
-  };
-}
+new {
+};
 
 ---
 
@@ -275,12 +234,10 @@ void b() {
                 (anonymous_object_creation_expression)))))))))
 
 ============================
-Target-type object creation
+Target-type object creation expression
 ============================
 
-void b() {
-  Friend friend = new("hi");
-}
+new("hi");
 
 ---
 
@@ -301,14 +258,12 @@ void b() {
                   (argument_list (argument (string_literal))))))))))))
 
 ============================
-Anonymous object creation with single unnamed
+Anonymous object creation expression with single unnamed
 ============================
 
-void b() {
-  var x = new {
-    args
-  };
-}
+new {
+  args
+};
 
 ---
 
@@ -328,14 +283,12 @@ void b() {
                 (anonymous_object_creation_expression (identifier))))))))))
 
 ============================
-Anonymous object creation with single named
+Anonymous object creation expression with single named
 ============================
 
-void b() {
-  var x = new {
-    test = "This"
-  };
-}
+new {
+  test = "This"
+};
 
 ---
 
@@ -361,9 +314,7 @@ void b() {
 Checked expressions
 ============================
 
-void b() {
-  var three = checked(1 + 2);
-}
+checked(1 + 2);
 
 ---
 
@@ -389,17 +340,16 @@ void b() {
 Object creation expressions
 ============================
 
-void b() {
-  new C.D(1, "hi");
-  a = new E
-  {
-    Foo = bar,
-  };
 
-  b = new E(1);
+new C.D(1, "hi");
+new E
+{
+  Foo = bar,
+};
 
-  c = new E(1) { };
-}
+new E(1);
+
+new E(1) { };
 
 ---
 
@@ -520,11 +470,8 @@ void b() {
 Anonymous method expressions
 ============================
 
-void a() {
-  delegate(int a) {
-    return a;
-  };
-}
+delegate(int a) {
+};
 
 ---
 
@@ -544,11 +491,8 @@ void a() {
 Anonymous method expression with discard parameters
 ============================
 
-void a() {
-  delegate(int _, int _) {
-    return a;
-  };
-}
+delegate(int _, int _) {
+};
 
 ---
 
@@ -570,12 +514,10 @@ void a() {
 Anonymous method expression with modifiers
 ============================
 
-void m() {
-  var a = static delegate(int a) { return a; };
-  var b = async delegate(int a) { return a; };
-  var c = async static delegate(int a) { return a; };
-  var d = static async delegate(int a) { return a; };
-}
+static delegate(int a) {  };
+async delegate(int a) {  };
+async static delegate(int a) {  };
+static async delegate(int a) {  };
 
 ---
 
@@ -653,10 +595,8 @@ void m() {
 Lambda expressions
 ============================
 
-void a() {
-  x => x + 1;
-  (A a, B b) => { return a.c(b); };
-}
+x => x + 1;
+(A a, B b) => { return a.c(b); };
 
 ---
 
@@ -682,10 +622,7 @@ void a() {
 Async Lambda
 ============================
 
-void a()
-{
-    Do(async () => {});
-}
+async () => {};
 
 ---
 
@@ -701,12 +638,10 @@ void a()
 Lambda expression with modifiers
 ============================
 
-void a() {
-  var lam = static x => x + 1;
-  var bda = async x => x + 1;
-  var syn = async static x => x + 1;
-  var txt = static async x => x + 1;
-}
+static x => 1;
+async x => 1;
+async static x => 1;
+static async x => 1;
 
 ---
 
@@ -759,10 +694,8 @@ void a() {
 Lambda expression with discard parameters
 ============================
 
-void a() {
-  var lam = (_, _) => 0;
-  var bda = (int _, int _) => 0;
-}
+(_, _) => 0;
+(int _, int _) => 0;
 
 ---
 
@@ -797,7 +730,7 @@ void a() {
 Lambda expression with ref modifier
 ============================
 
-MyIntDelegate a = (ref int i) => i + 1;
+(ref int i) => 1;
 
 ---
 
@@ -823,9 +756,7 @@ MyIntDelegate a = (ref int i) => i + 1;
 Invocation expressions
 ============================
 
-void a() {
-  b(c, in d, out e, ref f, out var g);
-}
+b(c, in d, out e, ref f, out var g);
 
 ---
 
@@ -847,9 +778,7 @@ void a() {
 Tuple expressions
 ============================
 
-void a() {
-  b = (c, d: "e");
-}
+(c, d: "e");
 
 ---
 
@@ -866,12 +795,10 @@ void a() {
               (string_literal)))))))))
 
 ============================
-Implicit array creation
+Implicit array creation expression
 ============================
 
-void b() {
-  var z = new [] { 1, 2, 3 };
-}
+new [] { 1, 2, 3 };
 
 ---
 
@@ -892,12 +819,10 @@ void b() {
                     (integer_literal)))))))))))
 
 ============================
-Implicit multi array creation
+Implicit multi array creation expression
 ============================
 
-void b() {
-  var z = new [,] { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-}
+new [,] { { 1, 1 }, { 2, 2 }, { 3, 3 } };
 
 ---
 
@@ -924,12 +849,10 @@ void b() {
                       (integer_literal))))))))))))
 
 ============================
-Stackalloc implicit array
+Stackalloc implicit array creation expression
 ============================
 
-void b() {
-  var z = stackalloc [] { 1, 2, 3 };
-}
+stackalloc [] { 1, 2, 3 };
 
 ---
 
@@ -950,12 +873,10 @@ void b() {
                     (integer_literal)))))))))))
 
 ============================
-Stackalloc explicit array
+Stackalloc explicit array creation expression
 ============================
 
-void b() {
-  var z = stackalloc int[] { 1, 2, 3 };
-}
+stackalloc int[] { 1, 2, 3 };
 
 ---
 
@@ -977,13 +898,11 @@ void b() {
                     (integer_literal)))))))))))
 
 ============================
-Explicit array creation
+Explicit array creation expression
 ============================
 
-void b() {
-  var z = new int[3] { 1, 2, 3 };
-  var b = new byte[,] { { 1, 2 }, { 2, 3 } };
-}
+new int[3] { 1, 2, 3 };
+new byte[,] { { 1, 2 }, { 2, 3 } };
 
 ---
 
@@ -1024,12 +943,10 @@ void b() {
                         (integer_literal))))))))))))
 
 ============================
-Explicit multi array creation
+Explicit multi array creation expression
 ============================
 
-void b() {
-  var z = new int[3,2] { { 1, 1 }, { 2, 2 }, { 3, 3 } };
-}
+new int[3,2] { { 1, 1 }, { 2, 2 }, { 3, 3 } };
 
 ---
 
@@ -1061,12 +978,10 @@ void b() {
                       (integer_literal))))))))))))
 
 ============================
-Array of named tuple
+Array creation expression of named tuple
 ============================
 
-void a() {
-  var z = new (string b, string c)[3];
-}
+new (string b, string c)[3];
 
 ---
 
@@ -1093,12 +1008,10 @@ void a() {
                     (integer_literal))))))))))))
 
 ============================
-Makeref
+Makeref expression
 ============================
 
-void b() {
-  var gp = __makeref(g);
-}
+__makeref(g);
 
 ---
 
@@ -1116,14 +1029,12 @@ void b() {
                   (identifier))))))))))
 
 ============================
-Postfix unary
+Postfix unary expression
 ============================
 
-void b() {
-  a--;
-  a++;
-  var b=a!;
-}
+a--;
+a++;
+a!;
 
 ---
 
@@ -1143,12 +1054,10 @@ void b() {
                   (identifier))))))))))
 
 ============================
-__reftype
+__reftype expression
 ============================
 
-void b() {
-  var z = __reftype(g);
-}
+__reftype(g);
 
 ---
 
@@ -1166,12 +1075,10 @@ void b() {
                   (identifier))))))))))
 
 ============================
-__refvalue
+__refvalue expression
 ============================
 
-void b() {
-  var z = __refvalue(g, int);
-}
+__refvalue(g, int);
 
 ---
 
@@ -1190,12 +1097,10 @@ void b() {
                   (predefined_type))))))))))
 
 ============================
-sizeof
+sizeof expression
 ============================
 
-void b() {
-  var z = sizeof(int);
-}
+sizeof(int);
 
 ---
 
@@ -1213,13 +1118,11 @@ void b() {
                   (predefined_type))))))))))
 
 ============================
-typeof
+typeof expression
 ============================
 
-void b() {
-  var y = typeof(int);
-  var z = typeof(List<string>.Enumerator);
-}
+typeof(int);
+typeof(List<string>.Enumerator);
 
 ---
 
@@ -1245,13 +1148,11 @@ void b() {
 switch expression
 ============================
 
-void b() {
-  var r = operation switch {
-      1 => "one",
-      2 => "two",
-      _ => "more"
-  };
-}
+operation switch {
+    1 => "one",
+    2 => "two",
+    _ => "more"
+};
 
 ---
 
@@ -1281,13 +1182,11 @@ void b() {
 switch expression with trailing comma
 ============================
 
-void b() {
-  var r = operation switch {
-      1 => "one",
-      2 => "two",
-      _ => "more",
-  };
-}
+operation switch {
+    1 => "one",
+    2 => "two",
+    _ => "more",
+};
 
 ---
 
@@ -1317,11 +1216,10 @@ void b() {
 switch expression return
 ============================
 
-string b(Object operation) =>
-  operation switch {
-      1 => "one",
-      _ => "more",
-  };
+operation switch {
+    1 => "one",
+    _ => "more",
+};
 
 ---
 
@@ -1337,15 +1235,14 @@ string b(Object operation) =>
 switch expression with patterns
 ============================
 
-string b(Object operation) =>
-  operation switch {
-      Declaration d => "declaration",
-      Simple => "simple (constant)",
-      { } => "nothing",
-      var z => "var",
-      null => "constant",
-      int => "type"
-  };
+operation switch {
+    Declaration d => "declaration",
+    Simple => "simple (constant)",
+    { } => "nothing",
+    var z => "var",
+    null => "constant",
+    int => "type"
+};
 
 ---
 
@@ -1361,39 +1258,23 @@ string b(Object operation) =>
         (switch_expression_arm (type_pattern (predefined_type)) (string_literal)))))))
 
 =====================================
-await Expression
+await expression
 =====================================
 
-class Foo {
-  void Test() {
-    await x;
-  }
-}
+await x;
 
 ---
 
 (compilation_unit
-  (class_declaration
-    (identifier)
-    (declaration_list
-      (method_declaration
-        (predefined_type)
-        (identifier)
-        (parameter_list)
-        (block
-        (expression_statement
-          (await_expression
-            (identifier))))))))
+  (expression_statement
+    (await_expression
+      (identifier_name))))
 
 =====================================
 throw expression
 =====================================
 
-class Foo {
-  void Test() {
-    x = x ?? throw y;
-  }
-}
+x ?? throw y;
 
 ---
 
@@ -1416,10 +1297,10 @@ class Foo {
 
 
 =====================================
-Pecedence with OR and XOR
+Pecedence with OR and XOR expressions
 =====================================
 
-b = 4 | 5 ^ 6;
+4 | 5 ^ 6;
 
 ---
 (compilation_unit
@@ -1436,12 +1317,8 @@ b = 4 | 5 ^ 6;
 range expressions full
 =====================================
 
-class Foo {
-  void Test() {
-    var a = b[1..4];
-    var c = 1..^4;
-  }
-}
+b[1..4];
+1..^4;
 
 ---
 
@@ -1481,13 +1358,9 @@ class Foo {
 range expressions partial
 =====================================
 
-class Foo {
-  void Test() {
-    var a = b[..4];
-    var c = ^1..;
-    var d = b[..];
-  }
-}
+b[..4];
+^1..;
+b[..];
 
 ---
 
@@ -1534,11 +1407,7 @@ class Foo {
 cast expression
 =====================================
 
-class Foo {
-  void Test() {
-    x = (int) y;
-      }
-}
+(int) y;
 
 ---
 
@@ -1558,11 +1427,11 @@ class Foo {
               (cast_expression (predefined_type) (identifier)))))))))
 
 =====================================
-Generic type name no type args
+Generic type name no type args in typeof expression
 =====================================
 
-var d = typeof(Dictionary<,>);
-var t = typeof(Tuple<,,,>);
+typeof(Dictionary<,>);
+typeof(Tuple<,,,>);
 
 ---
 
@@ -1594,8 +1463,8 @@ var t = typeof(Tuple<,,,>);
 default expression
 =====================================
 
-var a = default(int);
-int b = default;
+default(int);
+default;
 
 ---
 (compilation_unit
@@ -1656,7 +1525,7 @@ ref var elementRef = ref arr[0];
 Element binding expression
 =====================================
 
-var x = new Dictionary<string,int> { ["a"] = 65 };
+new Dictionary<string,int> { ["a"] = 65 };
 
 ---
 
@@ -1683,10 +1552,10 @@ var x = new Dictionary<string,int> { ["a"] = 65 };
 Member access expression (methods)
 =====================================
 
-void Test(int value) {
-  value.ToString();
-  double.IsInfinity(value);
-}
+value.ToString();
+double.IsInfinity(value);
+a.a<int>();
+a<int>.a<int>();
 
 ---
 
@@ -1714,10 +1583,9 @@ void Test(int value) {
 Member access expression (properties)
 =====================================
 
-void Test(int value) {
-  var x = string.Empty;
-  var z = B<int>.Something;
-}
+string.Empty;
+B<int>.Something;
+B<int>.Something;
 
 ---
 
@@ -1743,7 +1611,7 @@ void Test(int value) {
 is expression
 =====================================
 
-var b = s is string;
+s is string;
 
 ---
 
@@ -1760,14 +1628,14 @@ var b = s is string;
               (predefined_type))))))))
 
 =====================================
-is pattern
+is expression with pattern
 =====================================
 
-var b = s is string s2;
-var c = s is "test";
-var a = 1 is int.MaxValue;
-var d = a is nameof(a);
-var e = a is (int)b;
+s is string s2;
+s is "test";
+1 is int.MaxValue;
+a is nameof(a);
+a is (int)b;
 
 ---
 
@@ -1840,7 +1708,7 @@ var e = a is (int)b;
 Precedence between is operator and conditional_expression
 =====================================
 
-int a = 1 is Object ? 1 : 2;
+1 is Object ? 1 : 2;
 
 ---
 
@@ -1861,12 +1729,12 @@ int a = 1 is Object ? 1 : 2;
               (integer_literal))))))))
 
 =====================================
-Precedence between is operator and as operator
+Precedence between is operator and as operator expression
 =====================================
 
-//var a = new object() is null as Object == false; // this parses with wrong precedence
-var a = new object() is null as Object;
-var b = true == 1 as int? is int;
+new object() is null as Object == false; // this parses with wrong precedence
+new object() is null as Object;
+true == 1 as int? is int;
 
 ---
 
@@ -1926,10 +1794,10 @@ void Do() {
               (argument_list (argument (identifier)) (argument (identifier)))))))))
 
 =====================================
-Null-forgiving operator
+Null-forgiving operator expression
 =====================================
 
-var x = name!.Length;
+name!.Length;
 
 ---
 
@@ -1948,7 +1816,7 @@ var x = name!.Length;
 Negated pattern
 =====================================
 
-var x = name is not null;
+name is not null;
 
 ---
 
@@ -1969,7 +1837,7 @@ var x = name is not null;
 Parenthesized pattern
 =====================================
 
-var x = name is (var a);
+name is (var a);
 
 ---
 
@@ -1990,7 +1858,7 @@ var x = name is (var a);
 Pattern Combinators and relational pattern
 =====================================
 
-var x = c is < '0' or >= 'A' and <= 'Z';
+c is < '0' or >= 'A' and <= 'Z';
 
 ---
 
@@ -2014,7 +1882,7 @@ var x = c is < '0' or >= 'A' and <= 'Z';
 Precedence of prefix_unary_expression and invocation_expression
 =====================================
 
-var x = !this.Call();
+!this.Call();
 
 ---
 
@@ -2035,8 +1903,8 @@ var x = !this.Call();
 Property patterns
 =====================================
 
-var x = operand is ILiteralOperation { ConstantValue: { HasValue: true, Value: null } };
-var x = operand is ILiteralOperation { ConstantValue.HasValue: true, ConstantValue.Value: null};
+operand is ILiteralOperation { ConstantValue: { HasValue: true, Value: null } };
+operand is ILiteralOperation { ConstantValue.HasValue: true, ConstantValue.Value: null};
 
 ---
 
@@ -2088,8 +1956,8 @@ var x = operand is ILiteralOperation { ConstantValue.HasValue: true, ConstantVal
 Positional patterns
 =====================================
 
-var a = p is var (x, y);
-var c = p is (var x, var y) { x: 0 };
+p is var (x, y);
+p is (var x, var y) { x: 0 };
 
 ---
 
@@ -2131,8 +1999,8 @@ var c = p is (var x, var y) { x: 0 };
 Type patterns
 =====================================
 
-var b = o is int or string; //is_pattern_expression with type_pattern
-var c = o is int; //is_expression with type
+o is int or string; //is_pattern_expression with type_pattern
+o is int; //is_expression with type
 
 ---
 
@@ -2164,7 +2032,7 @@ var c = o is int; //is_expression with type
 List patterns
 =====================================
 
-var a = p is [1,2,x,] and [] or [2,..];
+p is [1,2,x,] and [] or [2,..];
 
 ---
 
@@ -2190,7 +2058,7 @@ var a = p is [1,2,x,] and [] or [2,..];
 Conditional expression with member accesses
 =====================================
 
-var a = b ? c.A + d.A : e.A + f.A;
+b ? c.A + d.A : e.A + f.A;
 
 ---
 
@@ -2212,7 +2080,9 @@ var a = b ? c.A + d.A : e.A + f.A;
 Conditional access expression
 =====================================
 
-var a = b?.Something;
+b?.Something;
+a?.b?.c;
+a?.b.c;
 
 ---
 
@@ -2230,10 +2100,10 @@ var a = b?.Something;
               (identifier)))))))))
 
 =====================================
-Conditional access to element (should be implicit_element_access)
+Conditional access expression to element (should be implicit_element_access)
 =====================================
 
-var x = dict?["a"];
+dict?["a"];
 
 ---
 
@@ -2251,26 +2121,10 @@ var x = dict?["a"];
                   (bracketed_argument_list (argument (string_literal)))))))))))
 
 =====================================
-Conditional access expression with member binding
-=====================================
-
-if (a?.B != 1) { }
-
----
-
-(compilation_unit
-  (global_statement
-    (if_statement
-      (binary_expression
-        (conditional_access_expression (identifier) (member_binding_expression (identifier)))
-        (integer_literal))
-      (block))))
-
-=====================================
 Conditional access expression with simple member access
 =====================================
 
-if ((p as Person[])?[0]._Age != 1) { }
+(p as Person[])?[0]._Age;
 
 ---
 
@@ -2289,10 +2143,10 @@ if ((p as Person[])?[0]._Age != 1) { }
       (block))))
 
 =====================================
-Null-coalescing operator is right-associative
+Null-coalescing operator expression is right-associative
 =====================================
 
-var a = b ?? c ?? d;
+b ?? c ?? d;
 
 ---
 
@@ -2311,10 +2165,10 @@ var a = b ?? c ?? d;
                 (identifier)))))))))
 
 =====================================
-Precedence between null-coalescing operator and conditional OR
+Precedence between null-coalescing operator and conditional OR expression
 =====================================
 
-var a = b ?? c || d ?? e;
+b ?? c || d ?? e;
 
 ---
 
@@ -2335,10 +2189,10 @@ var a = b ?? c || d ?? e;
                 (identifier)))))))))
 
 =====================================
-Precedence between null-coalescing operator and conditional operator
+Precedence between null-coalescing operator and conditional operator expression
 =====================================
 
-var a = b ?? c ? d ?? e : f ?? g;
+b ?? c ? d ?? e : f ?? g;
 
 ---
 
@@ -2362,10 +2216,10 @@ var a = b ?? c ? d ?? e : f ?? g;
                 (identifier)))))))))
 
 =====================================
-Precedence between range and switch
+Precedence between range and switch expressions
 =====================================
 
-var a = 3..4 switch
+3..4 switch
 {
     _ => true
 };
@@ -2389,10 +2243,10 @@ var a = 3..4 switch
                 (boolean_literal)))))))))
 
 =====================================
-Precedence between unary and switch
+Precedence between unary and switch expressions
 =====================================
 
-var a = -3 switch
+-3 switch
 {
     _ => true
 };
@@ -2415,10 +2269,10 @@ var a = -3 switch
                 (boolean_literal)))))))))
 
 =====================================
-Precedence between range and as operator
+Precedence between range and as operator expression
 =====================================
 
-var a = 3..4 as Range;
+3..4 as Range;
 
 ---
 
@@ -2437,10 +2291,10 @@ var a = 3..4 as Range;
               (identifier))))))))
 
 =====================================
-Precedence between is and comparison operators
+Precedence between is and conditional operator expressions
 =====================================
 
-var allowedValuesList = someObj is null
+someObj is null
     ? default
     : new object();
 
